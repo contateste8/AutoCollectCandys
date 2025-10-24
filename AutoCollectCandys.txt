@@ -1,7 +1,7 @@
 --[[
 Auto Collect Candys - Brookhaven 🏡RP Halloween Event
 Made by @.contateste_
-( 100% Open Source)
+(100% Open Source)
 ]]
 if getgenv()._AutoCollectCandysRunning then
     return
@@ -199,4 +199,5 @@ platforms = nil
 candyList = nil
 connections = nil
 FinishCandyUI()
+
 getgenv()._AutoCollectCandysRunning = false
