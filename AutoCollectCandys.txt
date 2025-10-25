@@ -1,7 +1,7 @@
 --[[
 Auto Collect Candys - Brookhaven 🏡RP Halloween Event
 Made by @.contateste_
-(100% Open Source)
+( 100% Open Source)
 ]]
 if getgenv()._AutoCollectCandysRunning then
     return
@@ -28,34 +28,20 @@ getgenv()._AutoCollectCandysRunning = true
 local old = CoreGui:FindFirstChild("LoadingUI")
 if old then old:Destroy() end
 local Noclipping = false
-local NoclipConnection
-function Noclip()
-	if Noclipping then return end
-	Noclipping = true
-	NoclipConnection = RunService.Stepped:Connect(function()
-		if Character and Character:FindFirstChild("HumanoidRootPart") then
-			for _, part in ipairs(Character:GetDescendants()) do
-				if part:IsA("BasePart") then
-					part.CanCollide = false
+task.spawn(function()
+	while true do
+		if Noclipping then
+			local char = game.Players.LocalPlayer.Character or game.Players.LocalPlayer.CharacterAdded:Wait()
+			for _, p in pairs(char:GetDescendants()) do
+				if p:IsA("BasePart") then
+					p.CanCollide = false
 				end
 			end
 		end
-	end)
-end
-function UnNoclip()
-	if not Noclipping then return end
-	Noclipping = false
-	if NoclipConnection then
-		NoclipConnection:Disconnect()
-		NoclipConnection = nil
+		task.wait()
 	end
-	for _, part in ipairs(Character:GetDescendants()) do
-		if part:IsA("BasePart") then
-			part.CanCollide = true
-		end
-	end
-end
-Noclip()
+end)
+Noclipping = true
 workspace.FallenPartsDestroyHeight = 0/0
 local screenGui = Instance.new("ScreenGui", CoreGui)
 screenGui.Name = "LoadingUI"
@@ -142,7 +128,8 @@ FinishCandyUI = function()
 	TweenService:Create(container, TweenInfo.new(0.6), { Position = UDim2.new(0.5, -200, 0.5, 40) }):Play()
 	task.wait(0.7)
 	screenGui:Destroy()
-	UnNoclip()
+	Noclipping = false
+	game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState(Enum.HumanoidStateType.Jumping)
 	workspace.FallenPartsDestroyHeight = -500
 end
 local Players = game:GetService("Players")
@@ -199,5 +186,4 @@ platforms = nil
 candyList = nil
 connections = nil
 FinishCandyUI()
-
 getgenv()._AutoCollectCandysRunning = false
